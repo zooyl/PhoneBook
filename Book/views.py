@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from Book.models import Person, Phone, Email, Address, Group
+from Book.models import Person, Phone, Email, Address, Group, c_type
 from django.db import IntegrityError, DataError
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 
 def home(request):
@@ -31,14 +33,12 @@ class NewAdvanced(View):
         advanced = Person.objects.get(id=id)
         return render(request, 'edit_person.html', {'advanced': advanced})
 
-    def post(self, request):
+    def post(self, request, id):
         try:
-            id = request.POST['id']
             name = request.POST['name']
             surname = request.POST['surname']
             description = request.POST['description']
-            # if request is None:
-            # Edit for basic informations
+            # Edit for basic information
             edit = Person.objects.get(id=id)
             edit.name = name
             edit.surname = surname
@@ -50,7 +50,7 @@ class NewAdvanced(View):
             Email.objects.create(email=request.POST['email'], email_key=edit)
             Phone.objects.create(number=request.POST['phone_number'], phone_key=edit)
             Group.objects.create(name=request.POST['group'])
-            added = "Person added"
+            added = "Person successfully edited"
             return render(request, "back_button.html", {'added': added})
         except IntegrityError:
             unique = "E-mail already taken, it must be unique"
@@ -64,18 +64,14 @@ def basic_details(request, id):
     person = Person.objects.get(id=id)
     return render(request, "basic_details.html", {'person': person})
 
+
 def full_details(request, id):
-    person = Person.objects.get(id=id)
-    address = Address.objects.get(id=id)
-    email = Email.objects.get(id=id)
-    phone = Phone.objects.get(id=id)
-    group = Group.objects.get(id=id)
-    if request.method == "POST":
-        if request.POST == ['delete']: # to nie ma sensu i 77
-            person.delete()
-            redirect("/")
-        elif request.POST == ['edit']:
-            render(request, 'edit_person.html')
-    else:
+    try:
+        person = Person.objects.get(id=id)
+        address = person.occupant_key.all()
+        email = person.email_key.all()
+        phone = person.phone_key.all()
         return render(request, "details.html", {'id': id, 'person': person, 'address': address,
-                                                'email': email, 'phone': phone, 'group': group})
+                                                'email': email, 'phone': phone, "c_type": c_type})
+    except ObjectDoesNotExist:
+        raise Http404("This person does not have additional information")

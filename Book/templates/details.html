@@ -3,22 +3,23 @@
     Name: {{ person.name }}<br>
     Surname: {{ person.surname }}<br>
     Description: {{ person.description }}<br>
-
-    City: {{ address.city }}<br>
-    Street: {{ address.street }}<br>
-    House_nr: {{ address.house_nr }}<br>
-    Flat_nr: {{ address.flat_nr }}<br>
-
-    Phone number: {{ phone.number }}<br>
-    Number type: {{ phone.type }}<br>
-
-    Email: {{ email.email }}<br>
-    Type: {{ email.email_type }}<br>
+    {% for j in address %}
+    City: {{ j.city }}<br>
+    Street: {{ j.street }}<br>
+    House_nr: {{ j.house_nr }}<br>
+    Flat_nr: {{ j.flat_nr }}<br>
+    {% endfor %}
+    {% for i in phone %}
+    Phone number: {{ i.number }}<br>
+    Number type: {{ i.type }}<br>
+    {% endfor %}
+    {% for k in email %}
+    Email: {{ k.email }}<br>
+    Type: {{ k.get_email_type_display }}<br>
+    {% endfor %}
 
     Group: {{ group.name }}<br>
-    <form method="POST">
-    {% csrf_token %}
-    <input type="submit" value="Delete" name="delete">
-    <input type="submit" value="Edit" name="edit">
+    <a href="/edit/{{ person.id }}"><input type="submit" value="Edit"></a>
+    <input type="submit" value="Delete">
     </form>
 {% endblock content %}

@@ -4,4 +4,5 @@
     Surname: {{ person.surname }}<br>
     Description: {{ person.description }}<br>
     <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
+    <a href="/details/full/{{ person.id }}"><input type="submit" value="Additional info"></a>
 {% endblock content %}

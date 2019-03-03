@@ -17,24 +17,24 @@
         </label><br>
         <label>
             Address:
-            <input type="text" name="city" placeholder="city">
-            <input type="text" name="street" placeholder="street">
-            <input type="number" name="house_nr" placeholder="house nr">
-            <input type="number" name="flat_nr" placeholder="flat nr">
+            <input type="text" name="city" placeholder="City" value="{{ advanced.occupant_key }}">
+            <input type="text" name="street" placeholder="Street">
+            <input type="number" name="house_nr" placeholder="House nr">
+            <input type="number" name="flat_nr" placeholder="Flat nr">
         </label>
-        <label>
+        <label><br>
             E-Mail:
-            <input type="email" name="email">
+            <input type="email" name="email" placeholder="E-mail">
         </label>
-        <label>
+        <label><br>
             Phone number:
-            <input type="number" name="phone_number">
+            <input type="number" name="phone_number" placeholder="Phone number">
         </label>
-        <label>
+        <label><br>
             Group:
             <input type="text" name="group">
-        </label>
-        <button type="submit" value="{{ advanced.id }}" name="id">Save Person
+        </label><br>
+        <button type="submit">Save Person
         </button>
     <label>
         {{ unique }} {{ number }}
