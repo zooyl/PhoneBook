@@ -1,0 +1,7 @@
+*.pyc
+*.pyo
+__pycache__
+.idea/
+phone_virtual/
+local_settings.py
+PhoneBook/local_settings.py

@@ -1,0 +1,24 @@
+{% extends "basic.html" %}
+{% block content %}
+    Name: {{ person.name }}<br>
+    Surname: {{ person.surname }}<br>
+    Description: {{ person.description }}<br>
+
+    City: {{ address.city }}<br>
+    Street: {{ address.street }}<br>
+    House_nr: {{ address.house_nr }}<br>
+    Flat_nr: {{ address.flat_nr }}<br>
+
+    Phone number: {{ phone.number }}<br>
+    Number type: {{ phone.type }}<br>
+
+    Email: {{ email.email }}<br>
+    Type: {{ email.email_type }}<br>
+
+    Group: {{ group.name }}<br>
+    <form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Delete" name="delete">
+    <input type="submit" value="Edit" name="edit">
+    </form>
+{% endblock content %}

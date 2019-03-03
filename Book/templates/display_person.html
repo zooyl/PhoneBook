@@ -1,0 +1,10 @@
+{% extends "basic.html" %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {% for i in person %}
+            <a href="details/full/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
+        {% endfor %}
+    </form>
+    <a href="/new"><input type="submit" value="Add person"></a>
+{% endblock content %}
