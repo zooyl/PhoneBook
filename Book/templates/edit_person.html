@@ -5,15 +5,15 @@
         {% csrf_token %}
         <label>
             Name:
-            <input type="text" name="name" value="{{ last.name }}" placeholder="{{ last.name }}">
+            <input type="text" name="name" value="{{ advanced.name }}" placeholder="{{ advanced.name }}">
         </label>
         <label>
             Surname:
-            <input type="text" name="surname" value="{{ last.surname }}" placeholder="{{ last.surname }}">
+            <input type="text" name="surname" value="{{ advanced.surname }}" placeholder="{{ advanced.surname }}">
         </label>
         <label><br>
             Description:
-            <input type="text" name="description" value="{{ last.description }}" placeholder="{{ last.description }}">
+            <input type="text" name="description" value="{{ advanced.description }}" placeholder="{{ advanced.description }}">
         </label><br>
         <label>
             Address:
@@ -34,7 +34,7 @@
             Group:
             <input type="text" name="group">
         </label>
-        <button type="submit" value="{{ last.id }}" name="id">Save Person
+        <button type="submit" value="{{ advanced.id }}" name="id">Save Person
         </button>
     <label>
         {{ unique }} {{ number }}

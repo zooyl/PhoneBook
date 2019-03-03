@@ -21,7 +21,7 @@ urlpatterns = [
     path('', Book.views.home),
     path('admin/', admin.site.urls),
     path('new/', Book.views.NewBasic.as_view()),
-    path('new/edit', Book.views.NewAdvanced.as_view()),
+    path('edit/<int:id>', Book.views.NewAdvanced.as_view()),
     path('details/full/<int:id>', Book.views.full_details),
     path('details/basic/<int:id>', Book.views.basic_details)
 ]

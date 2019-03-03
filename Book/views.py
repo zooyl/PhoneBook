@@ -6,7 +6,11 @@ from django.db import IntegrityError, DataError
 
 def home(request):
     person = Person.objects.all().order_by('name')
-    return render(request, "display_person.html", {'person': person})
+    if person.exists():
+        return render(request, "display_person.html", {'person': person})
+    else:
+        empty_db = "You don't have any contacts"
+        return render(request, "display_person.html", {'person': person, 'empty_db': empty_db})
 
 
 class NewBasic(View):
@@ -23,9 +27,9 @@ class NewBasic(View):
 
 class NewAdvanced(View):
 
-    def get(self, request):
-        last = Person.objects.latest('id')
-        return render(request, 'edit_person.html', {'last': last})
+    def get(self, request, id):
+        advanced = Person.objects.get(id=id)
+        return render(request, 'edit_person.html', {'advanced': advanced})
 
     def post(self, request):
         try:
@@ -67,7 +71,7 @@ def full_details(request, id):
     phone = Phone.objects.get(id=id)
     group = Group.objects.get(id=id)
     if request.method == "POST":
-        if request.POST == ['delete']:
+        if request.POST == ['delete']: # to nie ma sensu i 77
             person.delete()
             redirect("/")
         elif request.POST == ['edit']:
