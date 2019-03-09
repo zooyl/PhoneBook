@@ -23,5 +23,5 @@ urlpatterns = [
     path('new/', Book.views.NewBasic.as_view()),
     path('edit/<int:id>', Book.views.NewAdvanced.as_view()),
     path('details/full/<int:id>', Book.views.full_details),
-    path('details/basic/<int:id>', Book.views.basic_details)
+    path('details/basic/<int:id>', Book.views.basic_details),
 ]

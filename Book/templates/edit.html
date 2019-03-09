@@ -1,0 +1,11 @@
+{% extends "basic.html" %}
+{% block content %}
+    <form method="POST">
+    {% csrf_token %}
+    <p>{{ form_person }}</p><br>
+    <p>{{ form_address }}</p><br>
+    <p>{{ form_phone }}</p><br>
+    <p>{{ form_email }}</p><br>
+    <input type="submit" value="Save changes">
+    </form>
+{% endblock content %}
