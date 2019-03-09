@@ -4,6 +4,7 @@ from Book.models import Person, Phone, Email, Address, Group, c_type
 from django.db import IntegrityError, DataError
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from .forms import AddPerson
 
 
 def home(request):
@@ -18,13 +19,15 @@ def home(request):
 class NewBasic(View):
 
     def get(self, request):
-        return render(request, 'add_basic.html')
+        form = AddPerson()
+        return render(request, 'add_basic.html', {'form': form})
 
     def post(self, request):
-        Person.objects.create(name=request.POST['name'], surname=request.POST['surname'],
-                              description=request.POST['description'])
-        last = Person.objects.latest('id')
-        return redirect(f'/details/basic/{last.id}')
+        form = AddPerson(request.POST)
+        if form.is_valid():
+            form.save()
+            last = Person.objects.latest('id')
+            return redirect(f'/details/basic/{last.id}')
 
 
 class NewAdvanced(View):

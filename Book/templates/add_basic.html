@@ -3,18 +3,7 @@
     <br>
 <form method="POST">
     {% csrf_token %}
-    <label>
-        Name:
-        <input type="text" name="name">
-    </label>
-    <label>
-        Surname:
-        <input type="text" name="surname">
-    </label>
-    <label><br>
-        Description:
-        <textarea cols="30" rows="5" name="description"></textarea>
-    </label><br>
+    {{ form }}
     <input type="submit" value="Add person">
 </form>
 {% endblock content %}
