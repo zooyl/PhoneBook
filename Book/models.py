@@ -34,17 +34,17 @@ class Address(models.Model):
 
 
 class Phone(models.Model):
-    number = models.IntegerField(unique=True, blank=True)
+    number = models.IntegerField(unique=True)
     type = models.CharField(max_length=64, choices=c_type, default=1)
     phone_key = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='phone_key')
 
 
 class Email(models.Model):
-    email = models.EmailField(max_length=64, unique=True, blank=True)
+    email = models.EmailField(max_length=64, unique=True)
     email_type = models.CharField(max_length=64, choices=e_type, default=2)
     email_key = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='email_key')
 
 
 class Group(models.Model):
-    name = models.CharField(max_length=64, blank=True)
+    name = models.CharField(max_length=64, unique=True)
     group_key = models.ManyToManyField(Person)

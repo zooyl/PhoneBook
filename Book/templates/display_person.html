@@ -1,6 +1,7 @@
 {% extends "basic.html" %}
 {% block content %}
     <div class="container ">
+        {{ empty_group }}
         {% for i in person %}
             <a class="text-center list-group-item btn btn-outline-dark" href="details/basic/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
         {% endfor %}

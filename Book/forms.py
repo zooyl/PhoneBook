@@ -17,14 +17,13 @@ class PersonAddressForm(ModelForm):
 
 
 class PersonPhoneForm(forms.Form):
-    number = forms.IntegerField(label="Number", required=False)
+    number = forms.IntegerField(label="Number", required=True)
     type = forms.ChoiceField(label="Type", choices=c_type)
     phone_key = forms.IntegerField(widget=forms.HiddenInput)
 
 
 class PersonEmailForm(forms.Form):
-    email = forms.EmailField(label="Email", required=False,
-                             error_messages={'unique': "This email has already been registered."})
+    email = forms.EmailField(label="Email", required=True)
     email_type = forms.ChoiceField(label="Type", choices=e_type)
     email_key = forms.IntegerField(widget=forms.HiddenInput)
 

@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from Book.models import Person, Phone, Email, Group, c_type
+from Book.models import Person, Phone, Email, Group, Address, c_type
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from .forms import AddPersonForm, PersonAddressForm, PersonEmailForm, PersonPhoneForm, AddGroupForm
 from django.views.generic.edit import DeleteView, UpdateView
 from django.urls import reverse_lazy
 
+# Bugfix = when you click delete group in detailed view,
+# the entire group is deleted from database (not just from person)
+
+# email validation if already exist in db
+# phone validation if already exist in db
+# address null value
 
 def home(request):
     person = Person.objects.all().order_by('name')
@@ -39,6 +45,30 @@ class EditBasic(UpdateView):
 
 class PersonDelete(DeleteView):
     model = Person
+    success_url = reverse_lazy('home')
+
+
+class AddressDelete(DeleteView):
+    model = Address
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class PhoneDelete(DeleteView):
+    model = Phone
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class EmailDelete(DeleteView):
+    model = Email
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class GroupDelete(DeleteView):
+    model = Group
+    fields = '__all__'
     success_url = reverse_lazy('home')
 
 
@@ -84,14 +114,19 @@ class AddEmail(View):
             email = email_form.cleaned_data['email']
             email_type = email_form.cleaned_data['email_type']
             Email.objects.create(email=email, email_type=email_type, email_key=person)
-        return redirect(f'/details/basic/{id}')
+            return redirect(f'/details/full/{id}')
+
 
 
 class AddGroup(View):
 
     def get(self, request, id):
         groups = Group.objects.all()
-        return render(request, "add_group.html", {'groups': groups})
+        if groups.exists():
+            return render(request, "add_group.html", {'groups': groups})
+        else:
+            empty_group = "There is no group in database"
+            return render(request, "display_person.html", {'empty_group': empty_group})
 
     def post(self, request, id):
         person = Person.objects.get(id=id)
@@ -139,6 +174,7 @@ def group_list(request):
     return render(request, "group_list.html", {'existing': existing})
 
 
+#TODO Group list with user list
 def group_details(request, id):
     # XD = Group.group_key.all()
     person = Person.objects.get(id=id)
@@ -147,34 +183,3 @@ def group_details(request, id):
     # pasod = Group.objects.filter(group_key=XD)
     # print(XD)
     return render(request, "group_details.html")
-
-
-
-
-    # EDIT PERSON POST
-    # def post(self, request, id):
-    #     advanced = Person.objects.get(id=id)
-    #     form_person = AddPersonForm(request.POST, instance=advanced)
-    #     form_address = PersonAddressForm(request.POST)
-    #     form_phone = PersonPhoneForm(request.POST)
-    #     form_email = PersonEmailForm(request.POST)
-    #     group_id = request.POST['group']
-    #     selected = Group.objects.get(id=group_id)
-    #     if form_person.is_valid():
-    #         form_person.save()
-    #         selected.group_key.add(advanced)
-    #         selected.save()
-    #     if form_address.is_valid():
-    #         form_address.save()
-    #     try:
-    #         if form_phone.is_valid():
-    #             number = form_phone.cleaned_data['number']
-    #             type = form_phone.cleaned_data['type']
-    #             Phone.objects.create(number=number, type=type, phone_key=advanced)
-    #         if form_email.is_valid():
-    #             email = form_email.cleaned_data['email']
-    #             email_type = form_email.cleaned_data['email_type']
-    #             Email.objects.create(email=email, email_type=email_type, email_key=advanced)
-    #         return redirect(f'/details/basic/{id}')
-    #     except IntegrityError:
-    #         return redirect(f'/edit/{id}')
