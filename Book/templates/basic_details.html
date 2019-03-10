@@ -1,11 +1,14 @@
 {% extends "basic.html" %}
 {% block content %}
     <div class="container">
-    Name: {{ person.name }}<br>
-    Surname: {{ person.surname }}<br>
-    Description: {{ person.description }}<br>
-    <a href="/"><input type="submit" value="Back"></a>
-    <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
-    <a href="/details/full/{{ person.id }}"><input type="submit" value="Additional info"></a>
+        Name: {{ person.name }}<br>
+        Surname: {{ person.surname }}<br>
+        Description: {{ person.description }}<br>
+        <br>
+        <div class="btn-group" role="group" aria-label="Basic example">
+        <a class="btn btn-secondary btn btn-dark" href="/">Back</a>
+        <a class="btn btn-secondary btn btn-dark" href="/edit/{{ person.id }}">Edit basic info</a>
+        <a class="btn btn-secondary btn btn-dark" href="/details/full/{{ person.id }}">Additional info</a>
+        </div>
     </div>
 {% endblock content %}

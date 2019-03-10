@@ -1,13 +1,9 @@
 {% extends "basic.html" %}
 {% block content %}
-    <div class="container">
-    <form method="POST">
-        {% csrf_token %}
+    <div class="container ">
         {% for i in person %}
-            <a href="details/basic/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
+            <a class="text-center list-group-item btn btn-outline-dark" href="details/basic/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
         {% endfor %}
-    </form>
     {{ empty_db }}<br>
-{#    <a href="/new"><input class="btn btn-dark" type="submit" value="Add person"></a>#}
     </div>
 {% endblock content %}
