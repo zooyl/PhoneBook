@@ -1,6 +1,6 @@
 import django.forms as forms
 from django.forms import ModelForm
-from .models import Person, Address, c_type, e_type, Group
+from .models import Person, Address, Phone, Email, Group
 
 
 class AddPersonForm(ModelForm):
@@ -9,23 +9,25 @@ class AddPersonForm(ModelForm):
         fields = '__all__'
 
 
-class PersonAddressForm(ModelForm):
+class PersonAddressHiddenKey(ModelForm):
     class Meta:
         model = Address
         widgets = {'occupant_key': forms.HiddenInput()}
         fields = '__all__'
 
 
-class PersonPhoneForm(forms.Form):
-    number = forms.IntegerField(label="Number", required=True)
-    type = forms.ChoiceField(label="Type", choices=c_type)
-    phone_key = forms.IntegerField(widget=forms.HiddenInput)
+class PersonPhoneHiddenKey(ModelForm):
+    class Meta:
+        model = Phone
+        widgets = {'phone_key': forms.HiddenInput()}
+        fields = '__all__'
 
 
-class PersonEmailForm(forms.Form):
-    email = forms.EmailField(label="Email", required=True)
-    email_type = forms.ChoiceField(label="Type", choices=e_type)
-    email_key = forms.IntegerField(widget=forms.HiddenInput)
+class PersonEmailHiddenKey(ModelForm):
+    class Meta:
+        model = Email
+        widgets = {'email_key': forms.HiddenInput()}
+        fields = '__all__'
 
 
 class AddGroupForm(ModelForm):

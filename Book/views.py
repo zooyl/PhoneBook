@@ -3,16 +3,15 @@ from django.views import View
 from Book.models import Person, Phone, Email, Group, Address, c_type
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from .forms import AddPersonForm, PersonAddressForm, PersonEmailForm, PersonPhoneForm, AddGroupForm
-from django.views.generic.edit import DeleteView, UpdateView
+from .forms import AddPersonForm, PersonAddressHiddenKey, PersonEmailHiddenKey, PersonPhoneHiddenKey, AddGroupForm
+from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from django.urls import reverse_lazy
 
-# Bugfix = when you click delete group in detailed view,
-# the entire group is deleted from database (not just from person)
 
-# email validation if already exist in db
-# phone validation if already exist in db
-# address null value
+# Bug fix = when you click delete group in detailed view,
+# the entire group is deleted from database (not just from person) ----- SHOULD DELETE ONLY KEY
+# TODO Search bar by name or surname
+
 
 def home(request):
     person = Person.objects.all().order_by('name')
@@ -35,6 +34,39 @@ class NewBasic(View):
             form.save()
             last = Person.objects.latest('id')
             return redirect(f'/details/basic/{last.id}')
+
+
+class AddAddress(CreateView):
+    form_class = PersonAddressHiddenKey
+    model = Address
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['occupant_key'] = self.kwargs['id']
+        return initial_data
+
+
+class AddPhone(CreateView):
+    form_class = PersonPhoneHiddenKey
+    model = Phone
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['phone_key'] = self.kwargs['id']
+        return initial_data
+
+
+class AddEmail(CreateView):
+    form_class = PersonEmailHiddenKey
+    model = Email
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['email_key'] = self.kwargs['id']
+        return initial_data
 
 
 class EditBasic(UpdateView):
@@ -72,52 +104,6 @@ class GroupDelete(DeleteView):
     success_url = reverse_lazy('home')
 
 
-class AddAddress(View):
-
-    def get(self, request, id):
-        address_form = PersonAddressForm(initial={'occupant_key': id})
-        return render(request, "add_address.html", {'address_form': address_form})
-
-    def post(self, request, id):
-        address_form = PersonAddressForm(request.POST)
-        if address_form.is_valid():
-            address_form.save()
-        return redirect(f'/details/basic/{id}')
-
-
-class AddPhone(View):
-
-    def get(self, request, id):
-        phone_form = PersonPhoneForm(initial={'phone_key': id})
-        return render(request, "add_phone.html", {'phone_form': phone_form})
-
-    def post(self, request, id):
-        person = Person.objects.get(id=id)
-        phone_form = PersonPhoneForm(request.POST)
-        if phone_form.is_valid():
-            number = phone_form.cleaned_data['number']
-            type = phone_form.cleaned_data['type']
-            Phone.objects.create(number=number, type=type, phone_key=person)
-        return redirect(f'/details/basic/{id}')
-
-
-class AddEmail(View):
-
-    def get(self, request, id):
-        email_form = PersonEmailForm(initial={'email_key': id})
-        return render(request, "add_email.html", {'email_form': email_form})
-
-    def post(self, request, id):
-        person = Person.objects.get(id=id)
-        email_form = PersonEmailForm(request.POST)
-        if email_form.is_valid():
-            email = email_form.cleaned_data['email']
-            email_type = email_form.cleaned_data['email_type']
-            Email.objects.create(email=email, email_type=email_type, email_key=person)
-            return redirect(f'/details/full/{id}')
-
-
-
 class AddGroup(View):
 
     def get(self, request, id):
@@ -135,6 +121,20 @@ class AddGroup(View):
         selected.group_key.add(person)
         selected.save()
         return redirect(f'/details/basic/{id}')
+
+
+class CreateGroup(View):
+
+    def get(self, request):
+        group_form = AddGroupForm()
+        return render(request, "group.html", {'group_form': group_form})
+
+    def post(self, request):
+        group_form = AddGroupForm(request.POST)
+        if group_form.is_valid():
+            group_form.save()
+        success = "Group successfully created"
+        return render(request, "success.html", {'success': success})
 
 
 def basic_details(request, id):
@@ -155,31 +155,17 @@ def full_details(request, id):
         raise Http404("This person does not have additional information")
 
 
-class CreateGroup(View):
-
-    def get(self, request):
-        group_form = AddGroupForm()
-        return render(request, "group.html", {'group_form': group_form})
-
-    def post(self, request):
-        group_form = AddGroupForm(request.POST)
-        if group_form.is_valid():
-            group_form.save()
-        success = "Group successfully created"
-        return render(request, "success.html", {'success': success})
-
-
 def group_list(request):
     existing = Group.objects.all()
     return render(request, "group_list.html", {'existing': existing})
 
 
-#TODO Group list with user list
+# TODO Group list with user list
 def group_details(request, id):
     # XD = Group.group_key.all()
     person = Person.objects.get(id=id)
     group = person.group_key.all()
     print(group)
-    # pasod = Group.objects.filter(group_key=XD)
+    # x = Group.objects.filter(group_key=XD)
     # print(XD)
     return render(request, "group_details.html")

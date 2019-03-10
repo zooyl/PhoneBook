@@ -40,7 +40,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Phone {{ forloop.counter }}:</h5>
                             <p class="card-text"> Phone number: {{ i.number }}<br>
-                                Number type: {{ i.type }}<br></p>
+                                Number type: {{ i.get_type_display }}<br></p>
                             <a href="/delete/phone/{{ i.id }}" class="btn btn-dark float-right">Delete phone</a>
                         </div>
                     </div>
