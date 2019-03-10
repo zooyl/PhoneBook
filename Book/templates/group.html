@@ -1,0 +1,9 @@
+{% extends "basic.html" %}
+{% block content %}
+    <br>
+<form method="POST">
+    {% csrf_token %}
+    {{ group_form }}
+    <input type="submit" value="Create group">
+</form>
+{% endblock content %}

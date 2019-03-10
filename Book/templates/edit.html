@@ -1,11 +1,18 @@
 {% extends "basic.html" %}
 {% block content %}
     <form method="POST">
-    {% csrf_token %}
-    <p>{{ form_person }}</p><br>
-    <p>{{ form_address }}</p><br>
-    <p>{{ form_phone }}</p><br>
-    <p>{{ form_email }}</p><br>
-    <input type="submit" value="Save changes">
+        {% csrf_token %}
+        <p>{{ form_person }}</p><br>
+        <p>{{ form_address }}</p><br>
+        <p>{{ form_phone }}</p><br>
+        <p>{{ form_email }}</p><br>
+        <p>Group:
+        <select name="group">
+            {% for i in groups %}
+                <option value="{{ i.id }}">{{ i.name }}</option>
+            {% endfor %}
+        </select>
+        </p>
+        <input type="submit" value="Save changes">
     </form>
 {% endblock content %}

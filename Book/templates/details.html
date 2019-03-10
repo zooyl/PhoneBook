@@ -17,9 +17,9 @@
     Email: {{ k.email }}<br>
     Type: {{ k.get_email_type_display }}<br>
     {% endfor %}
-
-    Group: {{ group.name }}<br>
-    <a href="/edit/{{ person.id }}"><input type="submit" value="Edit"></a>
-    <input type="submit" value="Delete">
-    </form>
+    {% for l in group %}
+    Group: {{ l.name }}<br>
+    {% endfor %}
+    <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
+    <a href="/delete/{{ person.id }}"><input type="submit" value="Delete person"></a>
 {% endblock content %}

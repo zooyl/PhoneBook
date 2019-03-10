@@ -18,10 +18,12 @@ from django.urls import path
 import Book.views
 
 urlpatterns = [
-    path('', Book.views.home),
+    path('', Book.views.home, name='home'),
     path('admin/', admin.site.urls),
     path('new/', Book.views.NewBasic.as_view()),
     path('edit/<int:id>', Book.views.NewAdvanced.as_view()),
     path('details/full/<int:id>', Book.views.full_details),
     path('details/basic/<int:id>', Book.views.basic_details),
+    path('delete/<int:pk>', Book.views.PersonDelete.as_view()),
+    path('new/group', Book.views.CreateGroup.as_view()),
 ]

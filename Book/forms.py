@@ -1,6 +1,6 @@
 import django.forms as forms
 from django.forms import ModelForm
-from .models import Person, Address, c_type, e_type
+from .models import Person, Address, c_type, e_type, Group
 
 
 class AddPersonForm(ModelForm):
@@ -23,6 +23,13 @@ class PersonPhoneForm(forms.Form):
 
 
 class PersonEmailForm(forms.Form):
-    email = forms.EmailField(label="Email", required=False)
+    email = forms.EmailField(label="Email", required=False,
+                             error_messages={'unique': "This email has already been registered."})
     email_type = forms.ChoiceField(label="Type", choices=e_type)
     email_key = forms.IntegerField(widget=forms.HiddenInput)
+
+
+class AddGroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']
