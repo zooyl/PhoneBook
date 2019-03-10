@@ -1,9 +1,10 @@
 {% extends "basic.html" %}
 {% block content %}
     <br>
-<form method="POST">
+<form class="container" method="POST">
     {% csrf_token %}
     {{ group_form }}
     <input type="submit" value="Create group">
 </form>
+    {{ success }}
 {% endblock content %}

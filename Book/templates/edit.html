@@ -1,6 +1,6 @@
 {% extends "basic.html" %}
 {% block content %}
-    <form method="POST">
+    <form class="container" method="POST">
         {% csrf_token %}
         <p>{{ form_person }}</p><br>
         <p>{{ form_address }}</p><br>

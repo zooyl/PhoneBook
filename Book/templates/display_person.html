@@ -1,5 +1,6 @@
 {% extends "basic.html" %}
 {% block content %}
+    <div class="container">
     <form method="POST">
         {% csrf_token %}
         {% for i in person %}
@@ -7,5 +8,6 @@
         {% endfor %}
     </form>
     {{ empty_db }}<br>
-    <a href="/new"><input type="submit" value="Add person"></a>
+{#    <a href="/new"><input class="btn btn-dark" type="submit" value="Add person"></a>#}
+    </div>
 {% endblock content %}

@@ -24,6 +24,7 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
+
 class Address(models.Model):
     city = models.CharField(max_length=128, blank=True)
     street = models.CharField(max_length=128, blank=True)
@@ -46,4 +47,4 @@ class Email(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=64, blank=True)
-    group_key = models.ManyToManyField(Person, related_name="User")
+    group_key = models.ManyToManyField(Person)

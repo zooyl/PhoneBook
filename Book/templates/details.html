@@ -1,5 +1,6 @@
 {% extends "basic.html" %}
 {% block content %}
+    <div class="container">
     Name: {{ person.name }}<br>
     Surname: {{ person.surname }}<br>
     Description: {{ person.description }}<br>
@@ -20,6 +21,9 @@
     {% for l in group %}
     Group: {{ l.name }}<br>
     {% endfor %}
+
+    <a href="/details/basic/{{ person.id }}"><input type="submit" value="Back"></a>
     <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
     <a href="/delete/{{ person.id }}"><input type="submit" value="Delete person"></a>
+    </div>
 {% endblock content %}

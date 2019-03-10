@@ -1,8 +1,11 @@
 {% extends "basic.html" %}
 {% block content %}
+    <div class="container">
     Name: {{ person.name }}<br>
     Surname: {{ person.surname }}<br>
     Description: {{ person.description }}<br>
+    <a href="/"><input type="submit" value="Back"></a>
     <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
     <a href="/details/full/{{ person.id }}"><input type="submit" value="Additional info"></a>
+    </div>
 {% endblock content %}

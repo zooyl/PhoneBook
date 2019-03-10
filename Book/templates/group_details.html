@@ -1,0 +1,6 @@
+{% extends "basic.html" %}
+{% block content %}
+    {% for i in group %}
+        <p>{{ i.name }}</p>
+    {% endfor %}
+{% endblock content %}

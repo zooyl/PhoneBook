@@ -1,0 +1,6 @@
+{% extends "basic.html" %}
+{% block content %}
+    {% for i in existing %}
+        <a href="/group/{{ i.id }}">{{ i.name }}</a><br>
+    {% endfor %}
+{% endblock content %}

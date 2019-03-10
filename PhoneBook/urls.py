@@ -26,4 +26,6 @@ urlpatterns = [
     path('details/basic/<int:id>', Book.views.basic_details),
     path('delete/<int:pk>', Book.views.PersonDelete.as_view()),
     path('new/group', Book.views.CreateGroup.as_view()),
+    path('group/list', Book.views.group_list),
+    path('group/<int:id>', Book.views.group_details),
 ]

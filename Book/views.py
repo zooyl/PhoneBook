@@ -89,8 +89,6 @@ def full_details(request, id):
         email = person.email_key.all()
         phone = person.phone_key.all()
         group = Group.objects.filter(group_key=id)
-
-        print(group)
         return render(request, "details.html", {'id': id, 'person': person, 'address': address,
                                                 'email': email, 'phone': phone, "c_type": c_type, 'group':group})
     except ObjectDoesNotExist:
@@ -107,4 +105,17 @@ class CreateGroup(View):
         group_form = AddGroupForm(request.POST)
         if group_form.is_valid():
             group_form.save()
-        return redirect('/')
+        success = "Group created"
+        return render(request, "success.html", {'success': success})
+
+
+def group_list(request):
+    existing = Group.objects.all()
+    return render(request, "group_list.html", {'existing': existing})
+
+
+def group_details(request, id):
+    XD = Group.group_key.all()
+    # pasod = Group.objects.filter(group_key=XD)
+    print(XD)
+    return render(request, "group_details.html")
