@@ -1,0 +1,12 @@
+{% extends "basic.html" %}
+{% block content %}
+<form class="container" method="post">{% csrf_token %}
+            <p>Group:
+        <select name="group">
+            {% for i in groups %}
+                <option value="{{ i.id }}">{{ i.name }}</option>
+            {% endfor %}
+        </select>
+    <input class="btn btn-dark" type="submit" value="Add Group">
+</form>
+{% endblock content %}

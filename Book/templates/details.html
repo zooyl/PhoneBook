@@ -1,25 +1,92 @@
 {% extends "basic.html" %}
 {% block content %}
-    Name: {{ person.name }}<br>
-    Surname: {{ person.surname }}<br>
-    Description: {{ person.description }}<br>
-    {% for j in address %}
-    City: {{ j.city }}<br>
-    Street: {{ j.street }}<br>
-    House_nr: {{ j.house_nr }}<br>
-    Flat_nr: {{ j.flat_nr }}<br>
-    {% endfor %}
-    {% for i in phone %}
-    Phone number: {{ i.number }}<br>
-    Number type: {{ i.type }}<br>
-    {% endfor %}
-    {% for k in email %}
-    Email: {{ k.email }}<br>
-    Type: {{ k.get_email_type_display }}<br>
-    {% endfor %}
-    {% for l in group %}
-    Group: {{ l.name }}<br>
-    {% endfor %}
-    <a href="/edit/{{ person.id }}"><input type="submit" value="Edit person"></a>
-    <a href="/delete/{{ person.id }}"><input type="submit" value="Delete person"></a>
+    <div class="container">
+        {{ error }}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Basic info:</h5>
+                        <p class="card-text"> Name: {{ person.name }}<br>
+                            Surname: {{ person.surname }}<br>
+                            Description: {{ person.description }}<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% for j in address %}
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Address {{ forloop.counter }}:</h5>
+                            <p class="card-text"> City: {{ j.city }}<br>
+                                Street: {{ j.street }}<br>
+                                House nr: {{ j.house_nr }}<br>
+                                Flat nr: {{ j.flat_nr }}</p>
+                            <a href="/delete/address/{{ j.id }}" class="btn btn-dark float-right">Delete address</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% for i in phone %}
+
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Phone {{ forloop.counter }}:</h5>
+                            <p class="card-text"> Phone number: {{ i.number }}<br>
+                                Number type: {{ i.type }}<br></p>
+                            <a href="/delete/phone/{{ i.id }}" class="btn btn-dark float-right">Delete phone</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% for k in email %}
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">E-mail {{ forloop.counter }}:</h5>
+                            <p class="card-text"> Email: {{ k.email }}<br>
+                                Type: {{ k.get_email_type_display }}<br></p>
+                            <a href="/delete/email/{{ k.id }}" class="btn btn-dark float-right">Delete e-mail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        {% for l in group %}
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Group {{ forloop.counter }}:</h5>
+                            <p class="card-text"> Group: {{ l.name }}<br></p>
+                            <a href="/delete/group/{{ l.id }}" class="btn btn-dark float-right">Delete group</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        <br>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-secondary btn btn-dark" href="/details/basic/{{ person.id }}">Back</a>
+            <a class="btn btn-secondary btn btn-dark" href="/edit/{{ person.id }}">Edit basic info</a>
+            <a class="btn btn-secondary btn btn-dark" href="/add/address/{{ person.id }}">Add address</a>
+            <a class="btn btn-secondary btn btn-dark" href="/add/phone/{{ person.id }}">Add phone</a>
+            <a class="btn btn-secondary btn btn-dark" href="/add/email/{{ person.id }}">Add e-mail</a>
+            <a class="btn btn-secondary btn btn-dark" href="/add/group/{{ person.id }}">Add group</a>
+        </div>
+    </div>
+    <br>
 {% endblock content %}
