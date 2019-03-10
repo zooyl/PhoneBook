@@ -6,5 +6,6 @@
             <a href="details/basic/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
         {% endfor %}
     </form>
+    {{ empty_db }}<br>
     <a href="/new"><input type="submit" value="Add person"></a>
 {% endblock content %}
