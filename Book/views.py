@@ -1,77 +1,166 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from Book.models import Person, Phone, Email, Address, Group
-from django.db import IntegrityError, DataError
+from Book.models import Person, Phone, Email, Group, Address, c_type
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
+from .forms import AddPersonForm, PersonAddressHiddenKey, PersonEmailHiddenKey, PersonPhoneHiddenKey, AddGroupForm
+from django.views.generic.edit import DeleteView, UpdateView, CreateView
+from django.urls import reverse_lazy
 
 
 def home(request):
     person = Person.objects.all().order_by('name')
-    return render(request, "display_person.html", {'person': person})
+    if person.exists():
+        return render(request, "display_person.html", {'person': person})
+    else:
+        empty_db = "You don't have any contacts"
+        return render(request, "display_person.html", {'person': person, 'empty_db': empty_db})
 
 
 class NewBasic(View):
 
     def get(self, request):
-        return render(request, 'add_basic.html')
+        form = AddPersonForm()
+        return render(request, 'add_basic.html', {'form': form})
 
     def post(self, request):
-        Person.objects.create(name=request.POST['name'], surname=request.POST['surname'],
-                              description=request.POST['description'])
-        last = Person.objects.latest('id')
-        return redirect(f'/details/basic/{last.id}')
+        form = AddPersonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            last = Person.objects.latest('id')
+            return redirect(f'/details/basic/{last.id}')
 
 
-class NewAdvanced(View):
+class AddAddress(CreateView):
+    form_class = PersonAddressHiddenKey
+    model = Address
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['occupant_key'] = self.kwargs['id']
+        return initial_data
+
+
+class AddPhone(CreateView):
+    form_class = PersonPhoneHiddenKey
+    model = Phone
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['phone_key'] = self.kwargs['id']
+        return initial_data
+
+
+class AddEmail(CreateView):
+    form_class = PersonEmailHiddenKey
+    model = Email
+    success_url = reverse_lazy('home')
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        initial_data['email_key'] = self.kwargs['id']
+        return initial_data
+
+
+class EditBasic(UpdateView):
+    model = Person
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class PersonDelete(DeleteView):
+    model = Person
+    success_url = reverse_lazy('home')
+
+
+class AddressDelete(DeleteView):
+    model = Address
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class PhoneDelete(DeleteView):
+    model = Phone
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class EmailDelete(DeleteView):
+    model = Email
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class GroupDelete(DeleteView):
+    model = Group
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class AddGroup(View):
+
+    def get(self, request, id):
+        groups = Group.objects.all()
+        if groups.exists():
+            return render(request, "add_group.html", {'groups': groups})
+        else:
+            empty_group = "There is no group in database"
+            return render(request, "display_person.html", {'empty_group': empty_group})
+
+    def post(self, request, id):
+        person = Person.objects.get(id=id)
+        group_id = request.POST['group']
+        selected = Group.objects.get(id=group_id)
+        selected.group_key.add(person)
+        selected.save()
+        return redirect(f'/details/basic/{id}')
+
+
+class CreateGroup(View):
 
     def get(self, request):
-        last = Person.objects.latest('id')
-        return render(request, 'edit_person.html', {'last': last})
+        group_form = AddGroupForm()
+        return render(request, "group.html", {'group_form': group_form})
 
     def post(self, request):
-        try:
-            id = request.POST['id']
-            name = request.POST['name']
-            surname = request.POST['surname']
-            description = request.POST['description']
-            # if request is None:
-            # Edit for basic informations
-            edit = Person.objects.get(id=id)
-            edit.name = name
-            edit.surname = surname
-            edit.description = description
-            edit.save()
-            Address.objects.create(city=request.POST['city'], street=request.POST['street'],
-                                   house_nr=request.POST['house_nr'], flat_nr=request.POST['flat_nr'],
-                                   occupant_key=edit)
-            Email.objects.create(email=request.POST['email'], email_key=edit)
-            Phone.objects.create(number=request.POST['phone_number'], phone_key=edit)
-            Group.objects.create(name=request.POST['group'])
-            added = "Person added"
-            return render(request, "back_button.html", {'added': added})
-        except IntegrityError:
-            unique = "E-mail already taken, it must be unique"
-            return render(request, "edit_person.html", {'unique': unique})
-        except DataError:
-            number = "Number out of range"
-            return render(request, "edit_person.html", {'number': number})
+        group_form = AddGroupForm(request.POST)
+        if group_form.is_valid():
+            group_form.save()
+        success = "Group successfully created"
+        return render(request, "success.html", {'success': success})
 
 
 def basic_details(request, id):
     person = Person.objects.get(id=id)
     return render(request, "basic_details.html", {'person': person})
 
+
 def full_details(request, id):
-    person = Person.objects.get(id=id)
-    address = Address.objects.get(id=id)
-    email = Email.objects.get(id=id)
-    phone = Phone.objects.get(id=id)
-    group = Group.objects.get(id=id)
-    if request.method == "POST":
-        if request.POST == ['delete']:
-            person.delete()
-            redirect("/")
-        elif request.POST == ['edit']:
-            render(request, 'edit_person.html')
-    else:
+    try:
+        person = Person.objects.get(id=id)
+        address = person.occupant_key.all()
+        email = person.email_key.all()
+        phone = person.phone_key.all()
+        group = Group.objects.filter(group_key=id)
         return render(request, "details.html", {'id': id, 'person': person, 'address': address,
-                                                'email': email, 'phone': phone, 'group': group})
+                                                'email': email, 'phone': phone, "c_type": c_type, 'group': group})
+    except ObjectDoesNotExist:
+        raise Http404("This person does not have additional information")
+
+
+def group_list(request):
+    existing = Group.objects.all()
+    return render(request, "group_list.html", {'existing': existing})
+
+
+class SearchUser(View):
+
+    def get(self, request):
+        return render(request, "search.html")
+
+    def post(self, request):
+        search = request.POST['search']
+        person = Person.objects.filter(name__contains=search)
+        return render(request, "search.html", {'person': person})

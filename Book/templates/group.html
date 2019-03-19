@@ -3,7 +3,8 @@
     <br>
 <form class="container" method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input class="btn btn-dark" type="submit" value="Add person">
+    {{ group_form }}
+    <input class="btn btn-dark" type="submit" value="Create group">
 </form>
+    {{ success }}
 {% endblock content %}

@@ -1,0 +1,8 @@
+{% extends "basic.html" %}
+{% block content %}
+    <form class="container" method="post">{% csrf_token %}
+        <p>Are you sure you want to delete
+            "{{ object.city }} {{ object.street }} {{ object.house_nr }}/{{ object.flat_nr }}" ?</p>
+        <input class="btn btn-dark" type="submit" value="Confirm">
+    </form>
+{% endblock content %}
