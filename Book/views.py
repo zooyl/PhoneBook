@@ -160,12 +160,12 @@ def group_list(request):
     return render(request, "group_list.html", {'existing': existing})
 
 
-# TODO Group list with user list
-def group_details(request, id):
-    # XD = Group.group_key.all()
-    person = Person.objects.get(id=id)
-    group = person.group_key.all()
-    print(group)
-    # x = Group.objects.filter(group_key=XD)
-    # print(XD)
-    return render(request, "group_details.html")
+class SearchUser(View):
+
+    def get(self, request):
+        return render(request, "search.html")
+
+    def post(self, request):
+        search = request.POST['search']
+        person = Person.objects.filter(name__contains=search)
+        return render(request, "search.html", {'person': person})

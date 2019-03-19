@@ -31,9 +31,9 @@ urlpatterns = [
     path('delete/group/<int:pk>', Book.views.GroupDelete.as_view()),
     path('new/group', Book.views.CreateGroup.as_view()),
     path('group/list', Book.views.group_list),
-    path('group/<int:id>', Book.views.group_details),
     path('add/address/<int:id>', Book.views.AddAddress.as_view()),
     path('add/phone/<int:id>', Book.views.AddPhone.as_view()),
     path('add/email/<int:id>', Book.views.AddEmail.as_view()),
     path('add/group/<int:id>', Book.views.AddGroup.as_view()),
+    path('search/', Book.views.SearchUser.as_view()),
 ]

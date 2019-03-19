@@ -1,0 +1,17 @@
+{% extends "basic.html" %}
+{% block content %}
+    <form class="container" method="post">{% csrf_token %}
+        <label>Search:
+            <input type="text" name="search" placeholder="User name contains"><br>
+            <br>
+            <input class="btn btn-dark" type="submit" value="Search">
+        </label><br>
+    </form>
+    <br>
+    {% for i in person %}
+    <div class="container">
+        <a class="text-center list-group-item btn btn-outline-dark"
+           href="/details/basic/{{ i.id }}">{{ i.name }} {{ i.surname }}</a><br>
+    </div>
+    {% endfor %}
+{% endblock content %}
