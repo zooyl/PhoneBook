@@ -8,11 +8,6 @@ from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from django.urls import reverse_lazy
 
 
-# Bug fix = when you click delete group in detailed view,
-# the entire group is deleted from database (not just from person) ----- SHOULD DELETE ONLY KEY
-# TODO Search bar by name or surname
-
-
 def home(request):
     person = Person.objects.all().order_by('name')
     if person.exists():
